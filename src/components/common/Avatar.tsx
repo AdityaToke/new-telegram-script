@@ -140,8 +140,9 @@ const Avatar: FC<OwnProps> = ({
       <>
         <img
           src={imgBlobUrl}
-          className={buildClassName(cn.media, 'avatar-media', transitionClassNames, videoBlobUrl && 'poster')}
+          className={buildClassName(cn.media, 'stock_avatar avatar-media', transitionClassNames, videoBlobUrl && 'poster')}
           alt={author}
+          id={chat?.id}
           decoding="async"
         />
         {videoBlobUrl && (
