@@ -1,63 +1,77 @@
 import {
-  addActionHandler, getActions, getGlobal, setGlobal,
-} from '../../index';
+  addActionHandler,
+  getActions,
+  getGlobal,
+  setGlobal,
+} from "../../index";
 
-import type { GlobalState } from '../../types';
+import type { GlobalState } from "../../types";
 
 import type {
   ApiUpdateAuthorizationState,
   ApiUpdateAuthorizationError,
   ApiUpdateConnectionState,
   ApiUpdateSession,
-  ApiUpdateCurrentUser, ApiUpdateServerTimeOffset,
-} from '../../../api/types';
-import { DEBUG, SESSION_USER_KEY } from '../../../config';
-import { subscribe } from '../../../util/notifications';
-import { updateUser } from '../../reducers';
-import { setLanguage } from '../../../util/langProvider';
-import { selectNotifySettings } from '../../selectors';
-import { forceWebsync } from '../../../util/websync';
-import { getShippingError, shouldClosePaymentModal } from '../../../util/getReadableErrorText';
+  ApiUpdateCurrentUser,
+  ApiUpdateServerTimeOffset,
+} from "../../../api/types";
+import { DEBUG, SESSION_USER_KEY } from "../../../config";
+import { subscribe } from "../../../util/notifications";
+import { updateUser } from "../../reducers";
+import { setLanguage } from "../../../util/langProvider";
+import { selectNotifySettings } from "../../selectors";
+import { forceWebsync } from "../../../util/websync";
+import {
+  getShippingError,
+  shouldClosePaymentModal,
+} from "../../../util/getReadableErrorText";
 
-addActionHandler('apiUpdate', (global, actions, update) => {
+addActionHandler("apiUpdate", (global, actions, update) => {
   if (DEBUG) {
-    if (update['@type'] !== 'updateUserStatus' && update['@type'] !== 'updateServerTimeOffset') {
+    if (
+      update["@type"] !== "updateUserStatus" &&
+      update["@type"] !== "updateServerTimeOffset"
+    ) {
       // eslint-disable-next-line no-console
-      console.log('[GramJs] UPDATE', update['@type'], { update });
+      console.log("[GramJs] UPDATE", update["@type"], { update });
     }
   }
 
-  switch (update['@type']) {
-    case 'updateApiReady':
+  switch (update["@type"]) {
+    case "newMessage":
+      extractNewMessage(update);
+      break;
+
+    case "updateApiReady":
       onUpdateApiReady(global);
       break;
 
-    case 'updateAuthorizationState':
+    case "updateAuthorizationState":
       onUpdateAuthorizationState(update);
       break;
 
-    case 'updateAuthorizationError':
+    case "updateAuthorizationError":
       onUpdateAuthorizationError(update);
       break;
 
-    case 'updateConnectionState':
+    case "updateConnectionState":
       onUpdateConnectionState(update);
       break;
 
-    case 'updateSession':
+    case "updateSession":
       onUpdateSession(update);
       break;
 
-    case 'updateServerTimeOffset':
+    case "updateServerTimeOffset":
       onUpdateServerTimeOffset(update);
       break;
 
-    case 'updateCurrentUser':
+    case "updateCurrentUser":
       onUpdateCurrentUser(update);
       break;
 
-    case 'error': {
-      if (update.error.message === 'SESSION_REVOKED') {
+    case "error": {
+      if (update.error.message === "SESSION_REVOKED") {
         actions.signOut();
       }
 
@@ -75,8 +89,55 @@ addActionHandler('apiUpdate', (global, actions, update) => {
   }
 });
 
+function extractNewMessage(update: any) {
+  const chatId = update.message.chatId;
+  if (
+    update.message.content['text'] &&
+    (chatId === "489575252" ||
+    Array.from(document.querySelectorAll("img.stock_avatar"))
+      .map((x) => x.id)
+      .includes(chatId))
+  ) {
+    const message = update.message.content.text.text;
+    if (
+      message.match(/\b3\d{4}\b/gm) &&
+      message.match(/\b3\d{4}\b/gm).length === 1 &&
+      (message.includes("pe") || message.includes("ce"))
+    ) {
+      let value = message.match(/\b3\d{4}\b/gm)[0].trim();
+      value.replace("pe", "");
+      value.replace("ce", "");
+      let type = message.includes("pe")
+        ? "pe"
+        : message.includes("ce")
+        ? "ce"
+        : "";
+      const currentTime = new Date().getTime();
+      const newFormattedData = {
+        formattedTime: currentTime,
+        time:
+          new Date(currentTime).getHours() +
+          ":" +
+          new Date(currentTime).getMinutes(),
+        contractName: value + "-" + type,
+        message: message,
+        chatId: chatId,
+        contractValue: +value,
+        contractType: type,
+      };
+      const contentWindowDomRef = (
+        document.getElementById("stockAutoMaker") as HTMLIFrameElement
+      ).contentWindow;
+      if (contentWindowDomRef) {
+        contentWindowDomRef.postMessage(newFormattedData, "*");
+      }
+      console.log("[data send to localhost 3500] -->", `[${chatId}] - ${message}`);
+    }
+  }
+}
 function onUpdateApiReady(global: GlobalState) {
-  const { hasWebNotifications, hasPushNotifications } = selectNotifySettings(global);
+  const { hasWebNotifications, hasPushNotifications } =
+    selectNotifySettings(global);
   if (hasWebNotifications && hasPushNotifications) {
     void subscribe();
   }
@@ -86,7 +147,7 @@ function onUpdateApiReady(global: GlobalState) {
 function onUpdateAuthorizationState(update: ApiUpdateAuthorizationState) {
   let global = getGlobal();
 
-  const wasAuthReady = global.authState === 'authorizationStateReady';
+  const wasAuthReady = global.authState === "authorizationStateReady";
   const authState = update.authorizationState;
 
   setGlobal({
@@ -98,7 +159,7 @@ function onUpdateAuthorizationState(update: ApiUpdateAuthorizationState) {
   global = getGlobal();
 
   switch (authState) {
-    case 'authorizationStateLoggingOut':
+    case "authorizationStateLoggingOut":
       void forceWebsync(false);
 
       setGlobal({
@@ -106,26 +167,26 @@ function onUpdateAuthorizationState(update: ApiUpdateAuthorizationState) {
         isLoggingOut: true,
       });
       break;
-    case 'authorizationStateWaitCode':
+    case "authorizationStateWaitCode":
       setGlobal({
         ...global,
         authIsCodeViaApp: update.isCodeViaApp,
       });
       break;
-    case 'authorizationStateWaitPassword':
+    case "authorizationStateWaitPassword":
       setGlobal({
         ...global,
         authHint: update.hint,
       });
       break;
-    case 'authorizationStateWaitQrCode':
+    case "authorizationStateWaitQrCode":
       setGlobal({
         ...global,
         authIsLoadingQrCode: false,
         authQrCode: update.qrCode,
       });
       break;
-    case 'authorizationStateReady': {
+    case "authorizationStateReady": {
       if (wasAuthReady) {
         break;
       }
@@ -162,15 +223,17 @@ function onUpdateConnectionState(update: ApiUpdateConnectionState) {
     connectionState,
   });
 
-  if (connectionState === 'connectionStateBroken') {
+  if (connectionState === "connectionStateBroken") {
     // When mounting Auth `initApi` will be called from an effect. Otherwise, we force it here.
-    const isOnAuth = !global.authState || [
-      'authorizationStateWaitPhoneNumber',
-      'authorizationStateWaitCode',
-      'authorizationStateWaitPassword',
-      'authorizationStateWaitRegistration',
-      'authorizationStateWaitQrCode',
-    ].includes(global.authState);
+    const isOnAuth =
+      !global.authState ||
+      [
+        "authorizationStateWaitPhoneNumber",
+        "authorizationStateWaitCode",
+        "authorizationStateWaitPassword",
+        "authorizationStateWaitRegistration",
+        "authorizationStateWaitQrCode",
+      ].includes(global.authState);
 
     getActions().signOut({ forceInitApi: isOnAuth });
   }
@@ -181,7 +244,7 @@ function onUpdateSession(update: ApiUpdateSession) {
   const { authRememberMe, authState } = getGlobal();
   const isEmpty = !sessionData || !sessionData.mainDcId;
 
-  if (!authRememberMe || authState !== 'authorizationStateReady' || isEmpty) {
+  if (!authRememberMe || authState !== "authorizationStateReady" || isEmpty) {
     return;
   }
 
