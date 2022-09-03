@@ -53,13 +53,8 @@ const ChatList: FC<OwnProps> = ({
   // eslint-disable-next-line no-null/no-null
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldIgnoreDragRef = useRef(false);
-
-  const resolvedFolderId = (
-    folderType === 'all' ? ALL_FOLDER_ID : folderType === 'archived' ? ARCHIVED_FOLDER_ID : folderId!
-  );
-
+  const resolvedFolderId = ARCHIVED_FOLDER_ID;
   const orderedIds = useFolderManagerForOrderedIds(resolvedFolderId);
-
   const orderById = useMemo(() => {
     if (!orderedIds) {
       return undefined;
