@@ -25,7 +25,7 @@
     "prepare": "husky install",
     "statoscope:validate": "statoscope validate --input  public/build-stats.json",
     "statoscope:validate-diff": "statoscope validate --input input.json --reference reference.json",
-    "predeploy": "yarn build:production",
+    "predeploy": "yarn deploy:production",
     "deploy": "gh-pages -d dist"
   },
   "engines": {
