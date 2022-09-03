@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunktelegram_tt_script=self.webpackChunktelegram_tt_script||[]).push([[3472],{23472:(t,e,s)=>{s.r(e),s.d(e,{default:()=>a});var r=s(35099);const a=s.n(r)()}}]);
+//# sourceMappingURL=3472.e04e1e0edf908c7c9215.js.map
