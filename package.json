@@ -7,17 +7,17 @@
     "dev": "cross-env APP_ENV=development webpack serve --mode development",
     "dev:mocked": "cross-env APP_ENV=test APP_MOCKED_CLIENT=1 webpack serve --mode development --port 1235",
     "build:mocked": "cross-env APP_ENV=test APP_MOCKED_CLIENT=1 webpack --mode development",
-    "build:staging": "APP_ENV=staging APP_VERSION=$(npm run print_version --silent) webpack --mode development && ./deploy/copy_to_dist.sh",
-    "build:production": "npm i && APP_VERSION=$(npm run inc_version --silent) webpack && ./deploy/copy_to_dist.sh",
-    "deploy:production": "npm run build:production && git add -A && git commit -a -m '[Build]' --no-verify && git push",
+    "build:staging": "APP_ENV=staging APP_VERSION=$(yarn print_version --silent) webpack --mode development && ./deploy/copy_to_dist.sh",
+    "build:production": "yarn i && APP_VERSION=$(yarn inc_version --silent) webpack && ./deploy/copy_to_dist.sh",
+    "deploy:production": "yarn build:production && git add -A && git commit -a -m '[Build]' --no-verify && git push",
     "print_version": "node -p -e \"require('./package.json').version\"",
     "inc_version": "echo $((`cat .patch-version` + 1)) > .patch-version && echo \"$(node -p -e \"require('./package.json').version.match(/^\\d+\\.\\d+/)[0]\").$(cat .patch-version)\"",
     "telegraph:update_changelog": "node ./dev/telegraphChangelog.js",
     "check": "tsc && stylelint \"**/*.{css,scss}\" && eslint . --ext .ts,.tsx,.js --ignore-pattern src/lib/gramjs",
-    "check:fix": "npm run check -- --fix",
+    "check:fix": "yarn check -- --fix",
     "gramjs:tl": "node ./src/lib/gramjs/tl/generateModules.js",
     "gramjs:lint": "eslint src/lib/gramjs --ext .ts,.tsx,.js",
-    "gramjs:lint:fix": "npm run gramjs:lint -- --fix",
+    "gramjs:lint:fix": "yarn gramjs:lint -- --fix",
     "test": "cross-env APP_ENV=test jest --verbose --silent --forceExit",
     "test:playwright": "playwright test",
     "test:record": "playwright codegen localhost:1235",
@@ -26,8 +26,7 @@
     "statoscope:validate-diff": "statoscope validate --input input.json --reference reference.json"
   },
   "engines": {
-    "node": "^16.13",
-    "npm": "^8.5.2"
+    "node": "^16.13"
   },
   "husky": {
     "hooks": {
