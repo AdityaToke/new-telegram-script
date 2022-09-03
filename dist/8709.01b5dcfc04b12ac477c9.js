@@ -1,0 +1,2 @@
+(self.webpackChunktelegram_tt_script=self.webpackChunktelegram_tt_script||[]).push([[8709],{48704:e=>{e.exports=function(e){return{name:"VBScript in HTML",subLanguage:"xml",contains:[{begin:"<%",end:"%>",subLanguage:"vbscript"}]}}}}]);
+//# sourceMappingURL=8709.01b5dcfc04b12ac477c9.js.map

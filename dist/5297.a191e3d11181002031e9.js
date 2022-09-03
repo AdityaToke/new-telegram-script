@@ -1,0 +1,2 @@
+(self.webpackChunktelegram_tt_script=self.webpackChunktelegram_tt_script||[]).push([[5297],{3722:t=>{t.exports=function(t){return{aliases:["pycon"],contains:[{className:"meta.prompt",starts:{end:/ |$/,starts:{end:"$",subLanguage:"python"}},variants:[{begin:/^>>>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}}}]);
+//# sourceMappingURL=5297.a191e3d11181002031e9.js.map

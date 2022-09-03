@@ -1,0 +1,2 @@
+(self.webpackChunktelegram_tt_script=self.webpackChunktelegram_tt_script||[]).push([[3848],{69609:t=>{t.exports=function(t){return{name:"Node REPL",contains:[{className:"meta.prompt",starts:{end:/ |$/,starts:{end:"$",subLanguage:"javascript"}},variants:[{begin:/^>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}}}]);
+//# sourceMappingURL=3848.89041b2c27ce71b59738.js.map
