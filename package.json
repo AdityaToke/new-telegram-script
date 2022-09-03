@@ -1,4 +1,3 @@
-
 {
   "homepage": "https://adityatoke.github.io/new-telegram-script",
   "name": "telegram-tt-script",
@@ -25,7 +24,9 @@
     "test:record": "playwright codegen localhost:1235",
     "prepare": "husky install",
     "statoscope:validate": "statoscope validate --input  public/build-stats.json",
-    "statoscope:validate-diff": "statoscope validate --input input.json --reference reference.json"
+    "statoscope:validate-diff": "statoscope validate --input input.json --reference reference.json",
+    "predeploy": "yarn build:production",
+    "deploy": "gh-pages -d build"
   },
   "engines": {
     "node": "^16.13"
@@ -119,6 +120,7 @@
     "croppie": "^2.6.5",
     "emoji-data-ios": "git+https://github.com/korenskoy/emoji-data-ios#3c401da02c6792cea0b6c758795da406377bf667",
     "events": "^3.3.0",
+    "gh-pages": "^4.0.0",
     "idb-keyval": "^6.1.0",
     "lowlight": "^2.6.1",
     "opus-recorder": "github:Ajaxy/opus-recorder",
