@@ -10,7 +10,7 @@
     "build:mocked": "cross-env APP_ENV=test APP_MOCKED_CLIENT=1 webpack --mode development",
     "build:staging": "APP_ENV=staging APP_VERSION=$(yarn print_version --silent) webpack --mode development && ./deploy/copy_to_dist.sh",
     "build:production": "yarn install && APP_VERSION=$(yarn inc_version --silent) webpack && ./deploy/copy_to_dist.sh",
-    "deploy:production": "yarn build:production && bash load-angular-dashboard.sh && git add -A && git commit -a -m '[Build]' --no-verify && git push ",
+    "deploy:production": "rm -rf dist && yarn build:production && bash load-angular-dashboard.sh && git add -A && git commit -a -m '[Build]' --no-verify && git push ",
     "print_version": "node -p -e \"require('./package.json').version\"",
     "inc_version": "echo $((`cat .patch-version` + 1)) > .patch-version && echo \"$(node -p -e \"require('./package.json').version.match(/^\\d+\\.\\d+/)[0]\").$(cat .patch-version)\"",
     "telegraph:update_changelog": "node ./dev/telegraphChangelog.js",
