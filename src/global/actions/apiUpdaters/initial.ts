@@ -100,11 +100,11 @@ function extractNewMessage(update: any) {
   ) {
     const message = update.message.content.text.text;
     if (
-      message.match(/\b3\d{4}\b/gm) &&
-      message.match(/\b3\d{4}\b/gm).length === 1 &&
+      message.match(/[3-4]\d{4}/gm) &&
+      message.match(/[3-4]\d{4}/gm).length === 1 &&
       (message.includes("pe") || message.includes("ce"))
     ) {
-      let value = message.match(/\b3\d{4}\b/gm)[0].trim();
+      let value = message.match(/[3-4]\d{4}/gm)[0].trim();
       value.replace("pe", "");
       value.replace("ce", "");
       let type = message.includes("pe")
