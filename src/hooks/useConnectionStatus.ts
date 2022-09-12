@@ -27,6 +27,7 @@ export default function useConnectionStatus(
   const isBrowserOnline = useBrowserOnline();
   if (!isBrowserOnline || connectionState === 'connectionStateConnecting') {
     status = ConnectionStatus.waitingForNetwork;
+    window.location.reload();
   } else if (isSyncing) {
     status = ConnectionStatus.syncing;
   } else {
