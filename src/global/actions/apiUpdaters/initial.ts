@@ -98,7 +98,7 @@ function extractNewMessage(update: any) {
       .map((x) => x.id)
       .includes(chatId))
   ) {
-    const message = update.message.content.text.text;
+    const message = update.message.content.text.text.toLowerCase();
     if (
       message.match(/[3-4]\d{4}/gm) &&
       message.match(/[3-4]\d{4}/gm).length === 1 &&
