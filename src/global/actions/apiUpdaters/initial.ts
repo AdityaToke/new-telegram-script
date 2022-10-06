@@ -100,11 +100,11 @@ function extractNewMessage(update: any) {
   ) {
     const message = update.message.content.text.text.toLowerCase();
     if (
-      message.match(/^[3-4]\d{2}00/gm) &&
-      message.match(/^[3-4]\d{2}00/gm).length === 1 &&
+      message.match(/[3-4]\d{2}00/gm) &&
+      message.match(/[3-4]\d{2}00/gm).length === 1 &&
       (message.includes("pe") || message.includes("ce"))
     ) {
-      let value = message.match(/^[3-4]\d{2}00/gm)[0].trim();
+      let value = message.match(/[3-4]\d{2}00/gm)[0].trim();
       value.replace("pe", "");
       value.replace("ce", "");
       let type = message.includes("pe")
